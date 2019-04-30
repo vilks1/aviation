@@ -25,6 +25,13 @@ const formatRouteData = (data: string[]): IRouteDataRow[] => {
         codeShare: item[6],
         stops: item[7],
         equipment: item[8],
+      })
+      // remove duplicated data (same source and destination, but different flight no)
+      .filter((item: IRouteDataRow, index, self) => {
+        return index === self.findIndex((selfItem: IRouteDataRow) =>  {
+          return selfItem.sourceAirport === item.sourceAirport &&
+              selfItem.destinationAirport === item.destinationAirport;
+        });
       });
 };
 
