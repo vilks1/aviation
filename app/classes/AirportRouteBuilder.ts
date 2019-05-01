@@ -1,4 +1,4 @@
-import { IRouteDataRow } from '../functions/formatRouteData';
+import { IRouteDataRow } from './Interfaces';
 
 export default class AirportRouteBuilder {
   sourceAirportCode: string;
