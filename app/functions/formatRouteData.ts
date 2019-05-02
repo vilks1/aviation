@@ -1,19 +1,13 @@
 import { IRouteDataRow } from '../classes/Interfaces';
 
-export default (data: string[]): IRouteDataRow[] => {
-  return data
-      .map(item => item.split(','))
-      // remove empty items
-      .filter(item => item[0] !== '' && item[0] !== undefined)
-      .map(item => <IRouteDataRow>{
-        sourceAirport: item[2],
-        destinationAirport: item[4],
-      })
-      // remove duplicated data (same source and destination, but different flight no)
-      .filter((item: IRouteDataRow, index, self) => {
-        return index === self.findIndex((selfItem: IRouteDataRow) =>  {
-          return selfItem.sourceAirport === item.sourceAirport &&
-              selfItem.destinationAirport === item.destinationAirport;
-        });
+export default async (data: string[]): Promise<any> => {
+  const routes: IRouteDataRow[] = data
+      .map((item) => {
+        const splitted: string[] = item.split(',');
+        return <IRouteDataRow>{
+          sourceAirport: splitted[2],
+          destinationAirport: splitted[4],
+        };
       });
+  return Array.from(new Set(routes));
 };

@@ -2,6 +2,7 @@ import { IRouteDataRow } from './Interfaces';
 
 export default class AirportRouteBuilder {
   sourceAirportCode: string;
+  successfulRouteMinCount: number | undefined;
 
   constructor (sourceAirportCode: string) {
     this.sourceAirportCode = sourceAirportCode;
@@ -31,12 +32,20 @@ export default class AirportRouteBuilder {
         .filter(item => item.destinationAirport !== lastRouteItem.sourceAirport);
 
     if (lastRouteItem.destinationAirport === destinationAirportCode || flightsLeft === 0 || subRoutes.length === 0) {
+      if (lastRouteItem.destinationAirport === destinationAirportCode) {
+        if (this.successfulRouteMinCount === undefined || this.successfulRouteMinCount > currentRoutes.length) {
+          this.successfulRouteMinCount = currentRoutes.length;
+          console.log('x');
+        }
+      }
       builtRoutes.push(currentRoutes);
     } else {
-      for (const route of subRoutes) {
-        const copiedRoutes = Object.assign([], currentRoutes);
-        copiedRoutes.push(route);
-        builtRoutes = [...builtRoutes, ...await this.buildRoute(data, destinationAirportCode, copiedRoutes, flightsLeft)];
+      if (this.successfulRouteMinCount === undefined || this.successfulRouteMinCount <= currentRoutes.length + 1) {
+        for (const route of subRoutes) {
+          const copiedRoutes = Object.assign([], currentRoutes);
+          copiedRoutes.push(route);
+          builtRoutes = [...builtRoutes, ...await this.buildRoute(data, destinationAirportCode, copiedRoutes, flightsLeft)];
+        }
       }
     }
     return builtRoutes;

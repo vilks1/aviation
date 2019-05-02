@@ -14,7 +14,6 @@ interface IAirportDataRow {
 }
 
 interface IResponse {
-  availableRoutes: IRouteDataRow[][];
   shortestRoute: IRouteDataRow[];
   distance: number | undefined;
 }
